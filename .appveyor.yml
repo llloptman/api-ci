@@ -1,23 +1,16 @@
-plugins {
-    id 'java'
-}
+image: Ubuntu  # образ для сборки
 
-group 'ru.netology'
-version '1.0-SNAPSHOT'
+stack: jdk 11  # версия JDK
 
-sourceCompatibility = 11
-compileJava.options.encoding = 'UTF-8'
-compileTestJava.options.encoding = 'UTF-8'
+branches:
+  only:
+    - master  # ветка git
 
-repositories {
-    mavenCentral()
-}
+build: off  # будем использовать свой скрипт сборки
 
-dependencies {
-    testImplementation 'io.rest-assured:rest-assured:4.3.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.1'
-}
+install:
+  # запускаем SUT (& означает, что в фоновом режиме - не блокируем терминал для запуска тестов)
+  - java -jar ./artifacts/app-mbank.jar &
 
-test {
-    useJUnitPlatform()
-}
+build_script:
+  - ./gradlew test --info  # запускаем тест, флаг --info позволяет выводить больше информации
